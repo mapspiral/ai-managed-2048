@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.4.0...v0.5.0) (2026-05-29)
+
+
+### Features
+
+* **input:** add pointer-based swipe handler for mouse and touch ([3f8e9c4](https://github.com/mapspiral/ai-managed-2048/commit/3f8e9c4dfa69aad725eda05ba66c2b29d22c0824)), closes [#12](https://github.com/mapspiral/ai-managed-2048/issues/12)
+
 ## [0.4.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.3.0...v0.4.0) (2026-05-29)
 
 
