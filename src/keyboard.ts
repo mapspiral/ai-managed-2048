@@ -16,6 +16,8 @@ export function createKeyHandler(
   onNewGame: () => void,
 ): (e: KeyboardEvent) => void {
   return (e: KeyboardEvent) => {
+    if (!elements.overlay.hidden) return
+
     const dir = DIR_MAP[e.key]
     if (!dir) return
 
