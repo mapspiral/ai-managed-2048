@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh label *)",
+      "Bash(gh issue *)",
+      "Bash(gh pr *)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)",
+      "Bash(pnpm add *)",
+      "Bash(xargs ls -t)",
+      "Bash(xargs -I{} sh -c 'jq -r \"select\\(.type==\\\\\"assistant\\\\\"\\) | .message.content[]? | select\\(.type==\\\\\"tool_use\\\\\"\\) | [.name, \\(.input.command // \\\\\"\\\\\"\\)] | @tsv\" \"{}\" 2>/dev/null')",
+      "Bash(pnpm test *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(chmod +x /Users/mapspiral/Code/ai-managed-2048/scripts/bump-version.sh)",
+      "Bash(scripts/bump-version.sh patch *)",
+      "Bash(git push *)"
+    ]
+  }
+}
