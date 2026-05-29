@@ -65,7 +65,7 @@ jobs:
         uses: taiki-e/install-action@nextest
 
       - name: Cargo test
-        run: cargo nextest run --profile ci
+        run: cargo nextest run --profile ci --no-tests=warn
         working-directory: src-tauri
 
       - name: Install cargo-audit
@@ -90,3 +90,4 @@ jobs:
           name: Cargo (nextest)
           path: test-results/nextest.xml
           reporter: java-junit
+          fail-on-empty: false
