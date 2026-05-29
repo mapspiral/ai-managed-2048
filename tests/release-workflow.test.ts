@@ -58,6 +58,14 @@ describe('.github/workflows/release.yml — version validation', () => {
     )
     expect(validationStep).toBeDefined()
   })
+
+  it('has a step that validates the tag against tauri.conf.json version', () => {
+    const steps = allSteps(wf)
+    const validationStep = steps.find(
+      (s) => typeof s?.run === 'string' && /tauri\.conf\.json/.test(s.run) && /GITHUB_REF|tag/i.test(s.run),
+    )
+    expect(validationStep).toBeDefined()
+  })
 })
 
 describe('.github/workflows/release.yml — build jobs', () => {

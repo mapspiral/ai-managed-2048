@@ -18,6 +18,7 @@ fi
 
 PKG_JSON="package.json"
 CARGO_TOML="src-tauri/Cargo.toml"
+TAURI_CONF="src-tauri/tauri.conf.json"
 
 CURRENT="$(node -e "process.stdout.write(require('./${PKG_JSON}').version)")"
 
@@ -38,5 +39,12 @@ fs.writeFileSync('${PKG_JSON}', JSON.stringify(pkg, null, 2) + '\n');
 
 sed -i.bak "s/^version = \"${CURRENT}\"/version = \"${NEW}\"/" "$CARGO_TOML"
 rm -f "${CARGO_TOML}.bak"
+
+node -e "
+const fs = require('fs');
+const conf = JSON.parse(fs.readFileSync('${TAURI_CONF}', 'utf8'));
+conf.version = '${NEW}';
+fs.writeFileSync('${TAURI_CONF}', JSON.stringify(conf, null, 2) + '\n');
+"
 
 echo "Bumped version: ${CURRENT} → ${NEW}"
