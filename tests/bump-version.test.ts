@@ -17,6 +17,10 @@ function makeFixture(version: string): string {
     join(dir, 'src-tauri', 'Cargo.toml'),
     `[package]\nname = "test"\nversion = "${version}"\n`,
   )
+  writeFileSync(
+    join(dir, 'src-tauri', 'tauri.conf.json'),
+    JSON.stringify({ productName: 'test', version }, null, 2) + '\n',
+  )
   return dir
 }
 
@@ -63,6 +67,12 @@ describe('bump-version.sh — patch bump', () => {
     run('patch', dir)
     const cargo = readFileSync(join(dir, 'src-tauri', 'Cargo.toml'), 'utf8')
     expect(cargo).toMatch(/^version = "1\.2\.4"/m)
+  })
+
+  it('updates patch version in tauri.conf.json', () => {
+    run('patch', dir)
+    const conf = JSON.parse(readFileSync(join(dir, 'src-tauri', 'tauri.conf.json'), 'utf8'))
+    expect(conf.version).toBe('1.2.4')
   })
 
   it('prints old and new version', () => {
