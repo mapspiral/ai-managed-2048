@@ -16,7 +16,13 @@
       "Bash(scripts/bump-version.sh patch *)",
       "Bash(git push *)",
       "Bash(pnpm lint *)",
-      "Bash(pnpm tsc *)"
+      "Bash(pnpm tsc *)",
+      "Bash(gh api *)",
+      "Bash(gh ruleset *)",
+      "Bash(gh repo *)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); print\\(json.dumps\\(data, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; print\\(json.dumps\\(json.load\\(sys.stdin\\), indent=2\\)\\)\")",
+      "Bash(git branch *)"
     ]
   }
 }

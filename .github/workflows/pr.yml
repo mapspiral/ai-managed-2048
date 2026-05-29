@@ -39,6 +39,9 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: pnpm audit
+        run: pnpm audit --audit-level=moderate
+
       - name: Lint
         run: pnpm lint
 
@@ -51,4 +54,11 @@ jobs:
 
       - name: Cargo test
         run: cargo test
+        working-directory: src-tauri
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Cargo audit
+        run: cargo audit
         working-directory: src-tauri
