@@ -74,7 +74,7 @@ describe('.github/workflows/release-please.yml', () => {
     const wf = parseYaml(readFileSync(WORKFLOW_PATH, 'utf8')) as any
     const steps = Object.values(wf?.jobs ?? {}).flatMap((j: any) => j?.steps ?? [])
     const action = steps.find(
-      (s: any) => typeof s?.uses === 'string' && s.uses.startsWith('google-github-actions/release-please-action@v4'),
+      (s: any) => typeof s?.uses === 'string' && s.uses.startsWith('googleapis/release-please-action@v4'),
     )
     expect(action).toBeDefined()
   })
@@ -83,7 +83,7 @@ describe('.github/workflows/release-please.yml', () => {
     const wf = parseYaml(readFileSync(WORKFLOW_PATH, 'utf8')) as any
     const steps = Object.values(wf?.jobs ?? {}).flatMap((j: any) => j?.steps ?? [])
     const action = steps.find(
-      (s: any) => typeof s?.uses === 'string' && s.uses.startsWith('google-github-actions/release-please-action@v4'),
+      (s: any) => typeof s?.uses === 'string' && s.uses.startsWith('googleapis/release-please-action@v4'),
     ) as any
     expect(action?.with?.['config-file']).toBe('release-please-config.json')
     expect(action?.with?.['manifest-file']).toBe('.release-please-manifest.json')

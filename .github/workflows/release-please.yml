@@ -13,9 +13,8 @@ jobs:
   release-please:
     runs-on: ubuntu-22.04
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          bootstrap-sha: 82071df2660afdc3bcc9a8fab6bd8ca625bd6ef1
