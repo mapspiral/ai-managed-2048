@@ -2,6 +2,7 @@ import { newGame, slide, isWin, isLoss, spawnTile } from './board'
 import type { GameState, Direction } from './board'
 import { renderBoard, renderScore, showOverlay, hideOverlay } from './render'
 import { registerSwipeHandler } from './input'
+import { createKeyHandler } from './keyboard'
 
 let state: GameState
 
@@ -38,21 +39,15 @@ function performSlide(dir: Direction) {
   }
 }
 
-function handleKey(e: KeyboardEvent) {
-  const dirMap: Record<string, Direction> = {
-    ArrowLeft: 'left',
-    ArrowRight: 'right',
-    ArrowUp: 'up',
-    ArrowDown: 'down',
-  }
-  const dir = dirMap[e.key]
-  if (!dir) return
-  e.preventDefault()
-  performSlide(dir)
-}
-
 window.addEventListener('DOMContentLoaded', () => {
   start()
+  const elements = getElements()
+  const handleKey = createKeyHandler(
+    () => state,
+    (s) => { state = s },
+    elements,
+    start,
+  )
   window.addEventListener('keydown', handleKey)
   const { boardContainer, overlay } = getElements()
   registerSwipeHandler(boardContainer, overlay, performSlide)

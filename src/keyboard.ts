@@ -21,6 +21,8 @@ export function createKeyHandler(
     const dir = DIR_MAP[e.key]
     if (!dir) return
 
+    e.preventDefault()
+
     const state = getState()
     const result = slide(state.board, dir)
     if (!result.moved) return
