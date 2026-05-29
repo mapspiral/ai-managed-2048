@@ -30,7 +30,14 @@ jobs:
             exit 1
           fi
 
-          echo "Version $VERSION matches package.json and Cargo.toml"
+          TAURI_VERSION=$(node -e "process.stdout.write(require('./src-tauri/tauri.conf.json').version)")
+
+          if [ "$VERSION" != "$TAURI_VERSION" ]; then
+            echo "::error::Tag $TAG does not match tauri.conf.json version ($TAURI_VERSION)"
+            exit 1
+          fi
+
+          echo "Version $VERSION matches package.json, Cargo.toml, and tauri.conf.json"
 
   build-macos:
     needs: validate
