@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Architecture checks
+        run: bash scripts/arch-check.sh
+
       - uses: pnpm/action-setup@v4
         with:
           version: 11
