@@ -152,6 +152,24 @@ describe('check job permissions', () => {
   })
 })
 
+describe('arch-check step', () => {
+  it('has a step that runs scripts/arch-check.sh', () => {
+    const steps = allSteps(wf)
+    const archCheckStep = steps.find(
+      (s) => typeof s?.run === 'string' && /arch-check\.sh/.test(s.run),
+    )
+    expect(archCheckStep).toBeDefined()
+  })
+
+  it('arch-check step does not use continue-on-error', () => {
+    const steps = allSteps(wf)
+    const archCheckStep = steps.find(
+      (s) => typeof s?.run === 'string' && /arch-check\.sh/.test(s.run),
+    )
+    expect(archCheckStep?.['continue-on-error']).not.toBe(true)
+  })
+})
+
 function allSteps(workflow: any): any[] {
   if (!workflow?.jobs) return []
   return Object.values(workflow.jobs).flatMap((job: any) => job?.steps ?? [])
