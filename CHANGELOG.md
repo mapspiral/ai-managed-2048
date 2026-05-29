@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.5.0...v0.6.0) (2026-05-29)
+
+
+### Features
+
+* **keyboard:** prevent default scroll for all arrow keys; wire handler in main ([73c9ac4](https://github.com/mapspiral/ai-managed-2048/commit/73c9ac47792fbaa707e02d0fbc5b804856b4daf4))
+
 ## [0.5.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.4.0...v0.5.0) (2026-05-29)
 
 
