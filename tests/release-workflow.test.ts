@@ -96,6 +96,43 @@ describe('.github/workflows/release.yml — build jobs', () => {
   })
 })
 
+describe('.github/workflows/release.yml — macOS codesigning', () => {
+  it('macOS build step uses --bundles app, not --bundles dmg', () => {
+    const jobs = wf?.jobs ?? {}
+    const macosJob = Object.values(jobs).find(
+      (j: any) => j?.['runs-on'] === 'macos-latest',
+    ) as any
+    const buildStep = (macosJob?.steps ?? []).find(
+      (s: any) => typeof s?.run === 'string' && /tauri build/.test(s.run),
+    )
+    expect(buildStep).toBeDefined()
+    expect(buildStep.run).toMatch(/--bundles app/)
+    expect(buildStep.run).not.toMatch(/--bundles dmg/)
+  })
+
+  it('macOS job has a codesign re-sign step with --force --deep --sign -', () => {
+    const jobs = wf?.jobs ?? {}
+    const macosJob = Object.values(jobs).find(
+      (j: any) => j?.['runs-on'] === 'macos-latest',
+    ) as any
+    const codesignStep = (macosJob?.steps ?? []).find(
+      (s: any) => typeof s?.run === 'string' && /codesign/.test(s.run) && /--force/.test(s.run) && /--deep/.test(s.run) && /--sign\s+-/.test(s.run),
+    )
+    expect(codesignStep).toBeDefined()
+  })
+
+  it('macOS job has an hdiutil create step to package the DMG', () => {
+    const jobs = wf?.jobs ?? {}
+    const macosJob = Object.values(jobs).find(
+      (j: any) => j?.['runs-on'] === 'macos-latest',
+    ) as any
+    const hdiutilStep = (macosJob?.steps ?? []).find(
+      (s: any) => typeof s?.run === 'string' && /hdiutil create/.test(s.run),
+    )
+    expect(hdiutilStep).toBeDefined()
+  })
+})
+
 describe('.github/workflows/release.yml — GitHub Release', () => {
   it('has a release job', () => {
     expect(jobNames(wf).length).toBeGreaterThan(1)
