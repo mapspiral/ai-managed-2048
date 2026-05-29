@@ -79,3 +79,20 @@ export function slide(board: Board, direction: Direction): SlideResult {
   const moved = board.some((row, r) => row.some((cell, c) => cell !== result[r][c]))
   return { board: result, score: totalScore, moved }
 }
+
+export function isWin(board: Board): boolean {
+  return board.some(row => row.some(cell => cell === 2048))
+}
+
+export function isLoss(board: Board): boolean {
+  const hasEmpty = board.some(row => row.some(cell => cell === null))
+  if (hasEmpty) return false
+  const dirs: Direction[] = ['left', 'right', 'up', 'down']
+  return dirs.every(dir => !slide(board, dir).moved)
+}
+
+export type GameState = { board: Board; score: number }
+
+export function newGame(): GameState {
+  return { board: createBoard(), score: 0 }
+}
