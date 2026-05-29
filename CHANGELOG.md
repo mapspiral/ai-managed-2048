@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.3.0...v0.4.0) (2026-05-29)
+## [0.6.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.2.0...v0.6.0) (2026-05-29)
 
 
 ### Features
