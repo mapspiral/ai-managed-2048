@@ -61,40 +61,38 @@ describe('.github/workflows/release.yml — version validation', () => {
 })
 
 describe('.github/workflows/release.yml — build jobs', () => {
-  it('has a macOS arm64 build job', () => {
+  it('has a macOS build job on macos-latest', () => {
     const jobs = wf?.jobs ?? {}
-    const macosArm = Object.values(jobs).find(
-      (j: any) => typeof j?.['runs-on'] === 'string' && /macos/i.test(j['runs-on'])
-        && JSON.stringify(j).includes('aarch64'),
+    const macosJob = Object.values(jobs).find(
+      (j: any) => j?.['runs-on'] === 'macos-latest',
     )
-    expect(macosArm).toBeDefined()
+    expect(macosJob).toBeDefined()
   })
 
-  it('has a macOS x86_64 build job', () => {
+  it('does not have a macOS x86_64 build job', () => {
     const jobs = wf?.jobs ?? {}
     const macosX64 = Object.values(jobs).find(
       (j: any) => typeof j?.['runs-on'] === 'string' && /macos/i.test(j['runs-on'])
         && JSON.stringify(j).includes('x86_64'),
     )
-    expect(macosX64).toBeDefined()
+    expect(macosX64).toBeUndefined()
   })
 
-  it('has a Linux build job on ubuntu', () => {
+  it('has a Linux build job on ubuntu that builds a .deb', () => {
     const jobs = wf?.jobs ?? {}
     const linuxJob = Object.values(jobs).find(
       (j: any) => typeof j?.['runs-on'] === 'string' && /ubuntu/i.test(j['runs-on'])
-        && JSON.stringify(j).includes('AppImage'),
+        && JSON.stringify(j).includes('.deb'),
     )
     expect(linuxJob).toBeDefined()
   })
 
-  it('Linux job also builds a .deb', () => {
+  it('Linux job does not build an AppImage', () => {
     const jobs = wf?.jobs ?? {}
     const linuxJob = Object.values(jobs).find(
-      (j: any) => typeof j?.['runs-on'] === 'string' && /ubuntu/i.test(j['runs-on'])
-        && JSON.stringify(j).includes('AppImage'),
-    )
-    expect(JSON.stringify(linuxJob)).toMatch(/\.deb/)
+      (j: any) => typeof j?.['runs-on'] === 'string' && /ubuntu/i.test(j['runs-on']),
+    ) as any
+    expect(JSON.stringify(linuxJob)).not.toMatch(/AppImage/)
   })
 })
 
