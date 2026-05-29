@@ -6,9 +6,15 @@ A minimal 2048 game built with [Tauri v2](https://tauri.app) and TypeScript. Bui
 
 ### Prerequisites
 
-- [Podman](https://podman.io) — used to run the Rust/Tauri build toolchain in a container (no native Rust installation required)
+- [Rust](https://rustup.rs) — `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
 - [Node.js](https://nodejs.org) (v20+)
 - [pnpm](https://pnpm.io) — `npm install -g pnpm`
+
+Tauri also requires the Xcode Command Line Tools:
+
+```bash
+xcode-select --install
+```
 
 ### First-time setup
 
@@ -19,36 +25,23 @@ cd ai-managed-2048
 
 # Install Node dependencies
 pnpm install
-
-# Initialise Podman machine (first time only — allocate enough RAM for Rust compilation)
-podman machine init --memory 8192
-podman machine start
 ```
 
 ### Run in development mode
 
 ```bash
-pnpm tauri:dev
+pnpm tauri dev
 ```
 
-This builds the container image, compiles the Rust backend, and launches the app. The first run takes several minutes while Rust dependencies are compiled and cached.
+Compiles the Rust backend and launches the app with hot-reload for the frontend. The first run takes several minutes while Rust dependencies are compiled.
 
 ### Build a release binary
 
 ```bash
-pnpm tauri:build
+pnpm tauri build
 ```
 
-Produces `.deb`, `.rpm`, and `.AppImage` bundles under `src-tauri/target/release/bundle/`.
-
-### Native build (optional)
-
-If you have Rust installed natively via [rustup](https://rustup.rs), you can skip the container:
-
-```bash
-pnpm tauri dev     # dev mode
-pnpm tauri build   # release build
-```
+Produces a macOS `.app` bundle and `.dmg` installer under `src-tauri/target/release/bundle/`.
 
 ## Tech stack
 
@@ -58,7 +51,6 @@ pnpm tauri build   # release build
 | Frontend | TypeScript + plain CSS |
 | Build tooling | Vite |
 | Package manager | pnpm |
-| Build environment | Podman container (macOS) |
 
 ## Development
 
