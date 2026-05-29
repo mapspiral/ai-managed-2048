@@ -82,12 +82,73 @@ describe('cargo steps', () => {
     expect(buildStep).toBeDefined()
   })
 
-  it('has a cargo test step', () => {
+  it('has a cargo-nextest step running with --profile ci', () => {
     const steps = allSteps(wf)
     const testStep = steps.find(
-      (s) => typeof s?.run === 'string' && /cargo test/.test(s.run),
+      (s) => typeof s?.run === 'string' && /cargo nextest run/.test(s.run) && /--profile ci/.test(s.run),
     )
     expect(testStep).toBeDefined()
+  })
+
+  it('installs cargo-nextest via taiki-e/install-action', () => {
+    const steps = allSteps(wf)
+    const installStep = steps.find(
+      (s) => typeof s?.uses === 'string' && /taiki-e\/install-action/.test(s.uses) && /nextest/.test(s.uses),
+    )
+    expect(installStep).toBeDefined()
+  })
+})
+
+describe('vitest step', () => {
+  it('has a Vitest step', () => {
+    const steps = allSteps(wf)
+    const vitestStep = steps.find(
+      (s) => typeof s?.run === 'string' && /vitest run/.test(s.run),
+    )
+    expect(vitestStep).toBeDefined()
+  })
+
+  it('Vitest step uses JUnit reporter with outputFile', () => {
+    const steps = allSteps(wf)
+    const vitestStep = steps.find(
+      (s) => typeof s?.run === 'string' && /vitest run/.test(s.run),
+    )
+    expect(vitestStep?.run).toMatch(/--reporter=junit/)
+    expect(vitestStep?.run).toMatch(/--outputFile=test-results\/vitest\.xml/)
+  })
+})
+
+describe('test result publishing', () => {
+  it('publishes Vitest results via dorny/test-reporter with if: always()', () => {
+    const steps = allSteps(wf)
+    const publishStep = steps.find(
+      (s) => typeof s?.uses === 'string' && /dorny\/test-reporter/.test(s.uses)
+        && s?.with?.path?.includes('vitest.xml'),
+    )
+    expect(publishStep).toBeDefined()
+    expect(publishStep?.if).toMatch(/always/)
+  })
+
+  it('publishes Rust results via dorny/test-reporter with if: always()', () => {
+    const steps = allSteps(wf)
+    const publishStep = steps.find(
+      (s) => typeof s?.uses === 'string' && /dorny\/test-reporter/.test(s.uses)
+        && s?.with?.path?.includes('nextest.xml'),
+    )
+    expect(publishStep).toBeDefined()
+    expect(publishStep?.if).toMatch(/always/)
+  })
+})
+
+describe('check job permissions', () => {
+  it('check job has checks: write permission', () => {
+    const checkJob = wf?.jobs?.check
+    expect(checkJob?.permissions?.checks).toBe('write')
+  })
+
+  it('check job has contents: read permission', () => {
+    const checkJob = wf?.jobs?.check
+    expect(checkJob?.permissions?.contents).toBe('read')
   })
 })
 
