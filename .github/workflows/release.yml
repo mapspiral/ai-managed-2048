@@ -225,3 +225,45 @@ jobs:
           draft: ${{ steps.meta.outputs.draft == 'true' }}
           prerelease: ${{ steps.meta.outputs.prerelease == 'true' }}
           files: artifacts/**/*
+
+  homebrew:
+    needs: release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download macOS DMG
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "*.dmg" \
+            --dir /tmp/dmg
+
+      - name: Compute SHA256
+        id: sha
+        run: |
+          SHA=$(sha256sum /tmp/dmg/*.dmg | awk '{print $1}')
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout homebrew-tap
+        uses: actions/checkout@v4
+        with:
+          repository: mapspiral/homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+      - name: Update cask version and sha256
+        env:
+          SHA256: ${{ steps.sha.outputs.sha256 }}
+        run: |
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          sed -i "s|version \".*\"|version \"${VERSION}\"|" Casks/2048.rb
+          sed -i "s|sha256 \".*\"|sha256 \"${SHA256}\"|" Casks/2048.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/2048.rb
+          git commit -m "chore: bump 2048 cask to ${{ github.ref_name }}"
+          git push

@@ -246,3 +246,69 @@ describe('.github/workflows/release.yml — GitHub Release', () => {
     expect(yaml).toMatch(/pre.?release|beta|alpha|-[a-z]/i)
   })
 })
+
+describe('.github/workflows/release.yml — homebrew job', () => {
+  it('has a homebrew job', () => {
+    expect(wf?.jobs?.homebrew).toBeDefined()
+  })
+
+  it('homebrew job depends on the release job', () => {
+    const needs = wf?.jobs?.homebrew?.needs
+    const needsArr = Array.isArray(needs) ? needs : [needs]
+    expect(needsArr).toContain('release')
+  })
+
+  it('homebrew job runs on ubuntu', () => {
+    const runsOn: string = wf?.jobs?.homebrew?.['runs-on'] ?? ''
+    expect(runsOn).toMatch(/ubuntu/i)
+  })
+
+  it('homebrew job downloads the macOS DMG from the GitHub Release', () => {
+    const steps: any[] = wf?.jobs?.homebrew?.steps ?? []
+    const downloadStep = steps.find(
+      (s) => typeof s?.run === 'string' && /\.dmg/.test(s.run),
+    )
+    expect(downloadStep).toBeDefined()
+  })
+
+  it('homebrew job computes sha256 of the DMG', () => {
+    const steps: any[] = wf?.jobs?.homebrew?.steps ?? []
+    const sha256Step = steps.find(
+      (s) => typeof s?.run === 'string' && /sha256|shasum/i.test(s.run),
+    )
+    expect(sha256Step).toBeDefined()
+  })
+
+  it('homebrew job checks out mapspiral/homebrew-tap', () => {
+    const steps: any[] = wf?.jobs?.homebrew?.steps ?? []
+    const checkoutStep = steps.find(
+      (s) => typeof s?.uses === 'string' && /actions\/checkout/.test(s.uses)
+        && JSON.stringify(s).includes('homebrew-tap'),
+    )
+    expect(checkoutStep).toBeDefined()
+  })
+
+  it('homebrew job updates cask version and sha256', () => {
+    const steps: any[] = wf?.jobs?.homebrew?.steps ?? []
+    const updateStep = steps.find(
+      (s) => typeof s?.run === 'string'
+        && /version|VERSION/i.test(s.run)
+        && /sha256|SHA256/i.test(s.run)
+        && /Casks\/2048\.rb|cask/i.test(s.run),
+    )
+    expect(updateStep).toBeDefined()
+  })
+
+  it('homebrew job commits and pushes the updated cask', () => {
+    const steps: any[] = wf?.jobs?.homebrew?.steps ?? []
+    const commitStep = steps.find(
+      (s) => typeof s?.run === 'string' && /git commit/.test(s.run) && /git push/.test(s.run),
+    )
+    expect(commitStep).toBeDefined()
+  })
+
+  it('homebrew job uses a secret token to push to the tap repo', () => {
+    const jobYaml = JSON.stringify(wf?.jobs?.homebrew ?? {})
+    expect(jobYaml).toMatch(/secrets\.|HOMEBREW_TAP_TOKEN|TAP_TOKEN/i)
+  })
+})
