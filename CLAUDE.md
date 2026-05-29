@@ -4,13 +4,12 @@ Guidelines for AI agents working on this repository.
 
 ## Versioning
 
-Before opening a PR, run `scripts/bump-version.sh <patch|minor|major>` based on the change
-type defined in `docs/versioning.md`. Commit the version bump as a separate commit in the
-same PR:
+Version bumps are managed automatically by [release-please](https://github.com/googleapis/release-please).
+Do **not** run `scripts/bump-version.sh` or include `chore(release):` commits in PRs.
+After each push to `main`, the release-please Action creates or updates a Release PR with
+the correct next version computed from conventional commits on `main`.
 
-```
-chore(release): bump version to x.y.z
-```
+See `docs/versioning.md` for the full workflow.
 
 ## Commits
 
