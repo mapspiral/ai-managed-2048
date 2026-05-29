@@ -141,6 +141,74 @@ describe('.github/workflows/release.yml — macOS codesigning', () => {
   })
 })
 
+describe('.github/workflows/release.yml — test job', () => {
+  it('has a test job', () => {
+    expect(wf?.jobs?.test).toBeDefined()
+  })
+
+  it('test job depends on validate', () => {
+    const needs = wf?.jobs?.test?.needs
+    const needsArr = Array.isArray(needs) ? needs : [needs]
+    expect(needsArr).toContain('validate')
+  })
+
+  it('build-macos depends on test', () => {
+    const needs = wf?.jobs?.['build-macos']?.needs ?? []
+    const needsArr = Array.isArray(needs) ? needs : [needs]
+    expect(needsArr).toContain('test')
+  })
+
+  it('build-linux depends on test', () => {
+    const needs = wf?.jobs?.['build-linux']?.needs ?? []
+    const needsArr = Array.isArray(needs) ? needs : [needs]
+    expect(needsArr).toContain('test')
+  })
+
+  it('test job has a Vitest step with JUnit output', () => {
+    const steps: any[] = wf?.jobs?.test?.steps ?? []
+    const vitestStep = steps.find(
+      (s) => typeof s?.run === 'string' && /vitest run/.test(s.run) && /--reporter=junit/.test(s.run),
+    )
+    expect(vitestStep).toBeDefined()
+  })
+
+  it('test job installs cargo-nextest and runs with --profile ci', () => {
+    const steps: any[] = wf?.jobs?.test?.steps ?? []
+    const nextest = steps.find(
+      (s) => typeof s?.run === 'string' && /cargo nextest run/.test(s.run) && /--profile ci/.test(s.run),
+    )
+    expect(nextest).toBeDefined()
+  })
+
+  it('test job publishes Vitest results via dorny/test-reporter with if: always()', () => {
+    const steps: any[] = wf?.jobs?.test?.steps ?? []
+    const publishStep = steps.find(
+      (s) => typeof s?.uses === 'string' && /dorny\/test-reporter/.test(s.uses)
+        && s?.with?.path?.includes('vitest.xml'),
+    )
+    expect(publishStep).toBeDefined()
+    expect(publishStep?.if).toMatch(/always/)
+  })
+
+  it('test job publishes Rust results via dorny/test-reporter with if: always()', () => {
+    const steps: any[] = wf?.jobs?.test?.steps ?? []
+    const publishStep = steps.find(
+      (s) => typeof s?.uses === 'string' && /dorny\/test-reporter/.test(s.uses)
+        && s?.with?.path?.includes('nextest.xml'),
+    )
+    expect(publishStep).toBeDefined()
+    expect(publishStep?.if).toMatch(/always/)
+  })
+
+  it('test job has checks: write permission', () => {
+    expect(wf?.jobs?.test?.permissions?.checks).toBe('write')
+  })
+
+  it('test job has contents: read permission', () => {
+    expect(wf?.jobs?.test?.permissions?.contents).toBe('read')
+  })
+})
+
 describe('.github/workflows/release.yml — GitHub Release', () => {
   it('has a release job', () => {
     expect(jobNames(wf).length).toBeGreaterThan(1)
