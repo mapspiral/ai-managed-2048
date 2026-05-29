@@ -1,6 +1,6 @@
 [package]
 name = "ai-managed-2048"
-version = "0.1.1"
+version = "0.1.2"
 description = "A minimal 2048 game built with Tauri v2"
 authors = ["Robert van Drunen"]
 edition = "2021"

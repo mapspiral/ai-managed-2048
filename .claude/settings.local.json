@@ -14,7 +14,9 @@
       "Bash(git commit -m ' *)",
       "Bash(chmod +x /Users/mapspiral/Code/ai-managed-2048/scripts/bump-version.sh)",
       "Bash(scripts/bump-version.sh patch *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm tsc *)"
     ]
   }
 }
