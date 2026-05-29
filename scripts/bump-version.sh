@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# Atomically bumps the version in package.json and src-tauri/Cargo.toml.
-# Must be run from the repository root.
+# EMERGENCY USE ONLY — not part of the normal release workflow.
+# Versions are managed automatically by release-please (see docs/versioning.md).
+# Only use this script to correct a version after a failed release or to bootstrap
+# a new environment where the release-please manifest is out of sync.
+#
+# Atomically bumps the version in package.json, src-tauri/Cargo.toml, and
+# src-tauri/tauri.conf.json. Must be run from the repository root.
 set -euo pipefail
 
 BUMP="${1:-}"
