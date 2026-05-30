@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.6.0...v0.7.0) (2026-05-30)
+
+
+### Bug Fixes
+
+* **ci:** use RELEASE_PLEASE_TOKEN so release workflow fires on tag push ([4a7a3b0](https://github.com/mapspiral/ai-managed-2048/commit/4a7a3b0))
+* **ci:** add Homebrew release workflow for macOS DMG ([759119e](https://github.com/mapspiral/ai-managed-2048/commit/759119ea1e22a61094515e92bf78955ab2b231fa))
+
 ## [0.6.0](https://github.com/mapspiral/ai-managed-2048/compare/v0.2.0...v0.6.0) (2026-05-29)
 
 
